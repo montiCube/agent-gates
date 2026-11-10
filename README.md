@@ -28,4 +28,4 @@ The second command shows the code change and its ledger entry, LL-003, in one co
 
 ## Status and author
 
-Status: first release. The CI steps pass when run locally on Python 3.12. CI runs on GitHub from the first push. Author: Monti. Brief: https://gist.github.com/montiCube/593face1bac109ed8ea01af63732da3c. Licence: MIT.
+Status: first release. The CI steps pass when run locally on Python 3.12. CI runs on GitHub from the first push. Author: Jake Raum. Brief: https://gist.github.com/montiCube/593face1bac109ed8ea01af63732da3c. Licence: MIT.
