@@ -120,7 +120,7 @@ The example in this repo adds one check: the build fails if the installed versio
 - A human review of that log confirms every shadow action would have been the right response. The review notes are committed.
 - After arming, within 7 days, at least one armed action fires correctly on a real event.
 
-**Checked by.** The human, reading the log and the review. In the source system the gate closed on a controlled event with the human at the console: one induced failure, one automatic halt, one page, then ten 5-minute cycles refused over 47 minutes and a clean resume. The review of that event was committed with a ledger entry, and the gate closed.
+**Checked by.** The human, reading the log and the review. A real automatic halt eleven days earlier had held for 23 hours while its page reached nobody. The drill was the proof that the page path now worked. In the source system the gate closed on a controlled event with the human at the console: one induced failure, one automatic halt, one page, then ten 5-minute cycles refused over 47 minutes and a clean resume. The review of that event was committed with a ledger entry, and the gate closed.
 
 **Why.** An automatic action that is wrong fires faster than a human can react. The shadow log is the proof that it would have been right.
 
