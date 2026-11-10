@@ -13,7 +13,7 @@ A minimal governance layer for agent-driven development, in four parts:
 - [Go-live gates](docs/GO_LIVE_GATES.md). Eight release gates in nine rows. Each passes or fails. No partial credit.
 - [Logic ledger](docs/LOGIC_LEDGER.md). Shared memory across agents and across time. A behavioural change and its entry are one commit.
 - [Assumption discipline](docs/ASSUMPTION_DISCIPLINE.md). Verify a load-bearing claim, or mark it `[ASSUMPTION — verify]` inline.
-- [Adversarial board](docs/ADVERSARIAL_BOARD.md). Scheduled reviews whose only job is to find what is wrong. They hold at rulings and never merge or deploy.
+- [Adversarial board](docs/ADVERSARIAL_BOARD.md). Scheduled reviews whose only job is to find what is wrong. They consolidate the rulings the human must make, and never rule, merge or deploy.
 
 Extracted from a private system that has run under these gates for several months.
 
