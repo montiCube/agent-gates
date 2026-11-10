@@ -4,7 +4,7 @@ Eight gates stand between a system built by agents and its first run on real inp
 
 Each gate is binary. It passes or it fails. There is no partial credit.
 
-This file holds definitions only. It does not hold status. Status lives in one place, and that place is not here. In the source system this header once carried a per-gate snapshot. Within weeks it was wrong: it said day 10 of a soak that stood at day 28. One status surface, and only one.
+This file holds definitions only. It does not hold status. Status lives in one place, and that place is not here. In the source system this header once carried a per-gate snapshot. Within weeks it was wrong: it said day 10 of a soak that stood at day 28. The snapshot was deleted, and the header now points to the one file that holds status.
 
 ## Why this file exists
 
@@ -32,7 +32,7 @@ The order is roughly by size of the unknown. Gate 1 is the largest. Gate 8 is th
 
 **Checked by.** The harness writes the report. The human reads and merges it.
 
-**Why.** In the source system the first harness measured a different piece of logic from the one production ran. Its numbers were real and irrelevant.
+**Why.** In the source system the first harness measured a different piece of logic from the one production ran. Its numbers were real and irrelevant. A new harness was built on production's own code path, and this gate now requires one.
 
 ## Gate 2. Shadow soak
 
@@ -46,7 +46,7 @@ The order is roughly by size of the unknown. Gate 1 is the largest. Gate 8 is th
 
 **Checked by.** A query over the record shows the outcome mix. The human reads the weekly snapshots.
 
-**Why.** Before this gate, the record file did not exist. The pipeline had never run end to end. Offline measurement is necessary. It is not sufficient.
+**Why.** Offline measurement is necessary. It is not sufficient. In the source system, before this gate, the record file did not exist and the pipeline had never run end to end. The 30-day soak was its first full run, and it closed the gate.
 
 ## Gate 2b. Outcome soak
 
@@ -63,7 +63,7 @@ A soak that proves the system runs does not prove it works. In the source system
 - A reset rule, not a date. A change that alters what the system does resets day 0. A restart that changes nothing does not.
 - Every reset has a committed declaration file and a row in a segment table. A reset without the file is not a reset.
 - Earlier segments stay as their own rows. They are never pooled.
-- A failed attempt stays recorded as failed. The next attempt starts from a new day 0. In the source system: [ASSUMPTION — verify]
+- A failed attempt stays recorded as failed. The next attempt starts from a new day 0.
 
 **Checked by.** A census script computes n and the net from the raw record. The result is reproduced on a second machine at the same as-of time. Inputs are cited by sha256.
 
@@ -90,12 +90,12 @@ A soak that proves the system runs does not prove it works. In the source system
 
 **Evidence.**
 - At least 80 percent line and branch coverage on each named module. Each module on its own, not an average.
-- The module list lives in code, in the coverage script. Widening it is a code change, not a docs edit. In the source system it named 15 modules.
+- The module list lives in code, in the coverage script. Widening it is a code change, not a docs edit.
 - A new decision module joins the list in the same commit as its coverage test.
 
 **Checked by.** CI, on every push.
 
-**Why.** In the source system the first 80 tests all exercised the health monitor. The modules that decided what to do, how much, and whether it fit had zero coverage. The suite tested the monitor, not the thing it monitored.
+**Why.** In the source system the first 80 tests all exercised the health monitor. The modules that decided what to do, how much, and whether it fit had zero coverage. The suite tested the monitor, not the thing it monitored. This gate was written in response. It closed when each of the 8 modules it then named reached 80 percent. The list has since grown to 15.
 
 ## Gate 5. Continuous integration
 
@@ -120,7 +120,7 @@ The example in this repo adds one check: the build fails if the installed versio
 - A human review of that log confirms every shadow action would have been the right response. The review notes are committed.
 - After arming, within 7 days, at least one armed action fires correctly on a real event.
 
-**Checked by.** The human, reading the log and the review. In the source system the gate closed on a controlled event with the human at the console: one induced failure, one automatic halt, one page, then ten 5-minute cycles refused over 47 minutes and a clean resume.
+**Checked by.** The human, reading the log and the review. In the source system the gate closed on a controlled event with the human at the console: one induced failure, one automatic halt, one page, then ten 5-minute cycles refused over 47 minutes and a clean resume. The review of that event was committed with a ledger entry, and the gate closed.
 
 **Why.** An automatic action that is wrong fires faster than a human can react. The shadow log is the proof that it would have been right.
 
@@ -149,7 +149,7 @@ The example in this repo adds one check: the build fails if the installed versio
 - A rollback policy: the conditions for returning to shadow mode.
 - A sign-off line with the human's name and date.
 
-**Checked by.** The human signs. In the source system the merge of that document was the signature. It is reviewed quarterly.
+**Checked by.** The human signs. If the document says so, the human's merge of it is the signature. It is reviewed quarterly.
 
 **Rider.** If every protective action runs inside the process, a dead process protects nothing. Decide in writing where protection lives before going live, and record the ruling here.
 
@@ -164,7 +164,9 @@ The example in this repo adds one check: the build fails if the installed versio
 
 ## When a gate stops fitting
 
-Systems change. In the source system the components Gate 1 named were retired by a redesign before the gate closed. The gate was not quietly edited. A dated note re-staked the definition against the new components, cited the ruling, and kept the old text below it as history. Do the same. A gate's history is part of its evidence.
+Systems change. In the source system the components Gate 1 named were retired by a redesign before the gate closed. The gate was not quietly edited. A dated note re-staked it against the new components, and the old text was kept below the note as history.
+
+Do the same. A gate's history is part of its evidence.
 
 ## Going live
 
