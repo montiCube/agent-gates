@@ -8,7 +8,7 @@ AI coding agents drift. They assert things they have not checked. They ship beha
 
 ## What this is
 
-A minimal governance layer for agent-driven development, in four parts:
+A governance layer for agent-driven development, in four parts:
 
 - [Go-live gates](docs/GO_LIVE_GATES.md). Eight release gates in nine rows. Each passes or fails. No partial credit.
 - [Logic ledger](docs/LOGIC_LEDGER.md). Shared memory across agents and across time. A behavioural change and its entry are one commit.
