@@ -1,5 +1,7 @@
 # agent-gates
 
+![CI](https://github.com/montiCube/agent-gates/actions/workflows/ci.yml/badge.svg)
+
 ## The problem
 
 AI coding agents drift. They assert things they have not checked. They ship behavioural changes with no record of why. Over weeks this compounds into a system nobody fully understands.
@@ -28,4 +30,4 @@ The second command shows the code change and its ledger entry, LL-003, in one co
 
 ## Status and author
 
-Status: first release. The CI steps pass when run locally on Python 3.12. CI runs on GitHub from the first push. Author: Jake Raum. Brief: https://gist.github.com/montiCube/593face1bac109ed8ea01af63732da3c. Licence: MIT.
+Status: first release. The CI steps pass when run locally on Python 3.12. CI has run on GitHub since the first push; the badge shows the current state. Author: Jake Raum. Brief: https://gist.github.com/montiCube/593face1bac109ed8ea01af63732da3c. Licence: MIT.
