@@ -41,7 +41,13 @@ def test_halt_flag_blocks_the_cycle(tmp_path):
     assert result["reason"] == "halted"
 
 
-def test_hold_pages_the_human(tmp_path, monkeypatch):
-    monkeypatch.setattr(app, "page", lambda notifier, message: True)
-    result = app.run_cycle(lambda: None, FakeNotifier(), tmp_path / "HALT.flag", now=NOW)
+def test_paged_is_true_only_when_delivered(tmp_path):
+    # LL-003: call the real page(), not a patched one.
+    delivered = FakeNotifier(delivered=True)
+    result = app.run_cycle(lambda: None, delivered, tmp_path / "HALT.flag", now=NOW)
     assert result["paged"] is True
+    assert delivered.sent == ["holding: no accepted configuration event"]
+
+    failed = FakeNotifier(delivered=False)
+    result = app.run_cycle(lambda: None, failed, tmp_path / "HALT.flag", now=NOW)
+    assert result["paged"] is False

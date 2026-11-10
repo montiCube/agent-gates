@@ -25,7 +25,7 @@ def accept(event, now):
 def page(notifier, message):
     """Send a page. Return True only if the notifier delivered it."""
     result = notifier.send(message)
-    return bool(result)
+    return result.get("delivered") is True  # LL-003
 
 
 def run_cycle(read_event, notifier, halt_flag, now=None):
