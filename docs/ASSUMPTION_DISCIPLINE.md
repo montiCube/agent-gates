@@ -33,7 +33,9 @@ Verifying means naming what was run or read, and what it returned. "I checked" i
 - Searchable: `grep -rn "ASSUMPTION — verify"`. Inside backticks, as here, it is a mention, not a marker.
 - A marker is not a failure. It is an honest claim with its status attached.
 - It is resolved one of two ways. Verify the claim and replace the marker with the source. Or delete the claim.
-- Evidence that rests on an open marker does not close a gate. The pull request template asks about open markers in every change.
+- Evidence that rests on an open marker does not close a gate. The pull request template asks about open markers in every change, and CI checks the changed files for them.
+- Inside a fenced code block it is a mention too. Inside a blockquote it is not: a marker after `>` is open. Keep examples out of blockquotes.
+- CI blocks a merge on an open marker. `tools/check_governance.py` reads every file the change touches. It fails a pull request, or a push to `main`, that leaves one open. On any other push it prints the marker and passes. See `ledger/LL-004.md`.
 
 ## Worked example
 
@@ -45,7 +47,9 @@ This happened in the source system. The marker was not used. The steps below sho
 
 **With the marker.** The sentence would have read:
 
-> The calibration table never went live. [ASSUMPTION — verify]
+```
+The calibration table never went live. [ASSUMPTION — verify]
+```
 
 The conclusion built on it would have inherited the marker. Nobody could have treated it as settled.
 
