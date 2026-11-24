@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -27,3 +29,31 @@ jobs:
 
       - name: Run tests
         run: .venv/bin/python -m pytest example/service/tests -q
+
+      - name: Test the governance checker
+        run: .venv/bin/python -m pytest tools/tests -q
+
+      - name: Check the ledger, the markers and the digest
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_REF: ${{ github.base_ref }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_SHA: ${{ github.sha }}
+          PUSH_REF: ${{ github.ref }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$PR_BASE_REF"
+            head="$PR_HEAD_SHA"
+            markers=fail
+          else
+            head="$PUSH_SHA"
+            if [[ -z "$PUSH_BEFORE" || "$PUSH_BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$PUSH_BEFORE^{commit}" 2>/dev/null; then
+              base="$(git merge-base origin/main HEAD)"
+            else
+              base="$PUSH_BEFORE"
+            fi
+            if [ "$PUSH_REF" = "refs/heads/main" ]; then markers=fail; else markers=warn; fi
+          fi
+          echo "event=$EVENT_NAME base=$base head=$head markers=$markers"
+          .venv/bin/python tools/check_governance.py --base "$base" --head "$head" --markers "$markers"

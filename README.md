@@ -28,6 +28,19 @@ git show <hash>^2
 
 The second command shows the code change and its ledger entry, LL-003, in one commit. The example service and its CI are in `example/` and `.github/`.
 
+## What CI enforces
+
+`tools/check_governance.py` runs on every push and every pull request. It fails the build when:
+
+- A commit changes a behaviour path and adds no ledger entry in that same commit, unless the commit ends with a `Ledger-Exempt: <reason>` trailer.
+- A commit deletes, renames or rewrites an existing ledger entry. Adding one `Superseded by LL-NNN on YYYY-MM-DD.` line is the only change allowed.
+- A commit adds an entry numbered at or below an entry that already exists.
+- An entry lacks its title line or one of its five fields, or its title number differs from its file name.
+- `ledger/DIGEST.md` differs from the digest generated from the entries.
+- A changed file holds an open `[ASSUMPTION — verify]` marker, on a pull request or a push to `main`. On other pushes it is printed, not failed.
+
+It judges only the commits in the change, not the history before it. See `ledger/LL-004.md`.
+
 ## Status and author
 
 Status: first release. The CI steps pass when run locally on Python 3.12. CI has run on GitHub since the first push; the badge shows the current state. Author: Jake Raum. Brief: https://gist.github.com/montiCube/593face1bac109ed8ea01af63732da3c. Licence: MIT.

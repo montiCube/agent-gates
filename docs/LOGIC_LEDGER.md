@@ -60,3 +60,15 @@ Both are drift between the record and the code. The same-commit rule turns the f
 - `ledger/LL-003.md`. A correction. This repo's own. It lands in the example pull request, in the same commit as the change to `example/service/app.py`.
 
 The example service's first commit implements a reduced form of LL-002 and changes no existing behaviour, so it adds no entry. The first change to its behaviour is the example pull request. Run `git show` on that commit to see the code and the entry together.
+
+## How CI reads these rules
+
+Note added 2026-11-24, with LL-004.
+
+CI runs `tools/check_governance.py` on every push and every pull request.
+
+For the machine, behavioural means a path. A commit is behavioural if it changes a file under `example/service/`, `tools/` or `.github/workflows/`, except files under `example/service/tests/` and `tools/tests/`. The list lives in the script. Widening it is a code change.
+
+Each such commit must add a new `ledger/LL-NNN.md` in that same commit. An entry in a later commit does not count. The one escape is a git trailer in the commit message, `Ledger-Exempt: <reason>`, for a refactor with identical behaviour. Git reads a trailer only in the message's last paragraph, and an empty reason does not count.
+
+The digest is `ledger/DIGEST.md`. It holds one line per entry, `LL-NNN | live | <title>` or `LL-NNN | superseded by LL-MMM | <title>`. Regenerate it with `python tools/check_governance.py --write-digest` in the commit that adds or supersedes an entry. CI fails if the committed digest differs from the generated one.
