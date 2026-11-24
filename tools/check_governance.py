@@ -40,8 +40,14 @@ class GitError(Exception):
     pass
 
 
+# Every git call reads file names unquoted. Without this, git prints a
+# non-ASCII path such as tools/caf\u00e9.py in quotes with octal escapes, and no
+# check matches it (LL-005).
+GIT = ("git", "-c", "core.quotepath=off")
+
+
 def git(*args, check=True):
-    proc = subprocess.run(["git", *args], capture_output=True)
+    proc = subprocess.run([*GIT, *args], capture_output=True)
     if check and proc.returncode != 0:
         raise GitError(
             f"git {' '.join(args)} failed: {proc.stderr.decode(errors='replace').strip()}"
@@ -175,7 +181,7 @@ def short(rev):
 
 def empty_tree():
     proc = subprocess.run(
-        ["git", "hash-object", "-t", "tree", "--stdin"], input=b"", capture_output=True
+        [*GIT, "hash-object", "-t", "tree", "--stdin"], input=b"", capture_output=True
     )
     return proc.stdout.decode().strip()
 

@@ -280,3 +280,20 @@ def test_this_repository_passes_structure_and_digest_at_head(tmp_path):
     result = run_script(REPO, "--base", "HEAD", "--head", "HEAD", "--markers", "fail")
     assert result.returncode == 0, result.stdout
     assert "FAIL" not in result.stdout
+
+
+def test_non_ascii_file_names_are_read_unquoted(tmp_path):
+    # LL-005: git quotes non-ASCII paths unless core.quotepath is off.
+    repo, base = baseline(tmp_path)
+    repo.write("tools/café.py", "x = 1\n")
+    sha = repo.commit("add a behaviour file with a non-ASCII name")
+    behaviour = check(repo, base)
+    assert behaviour.returncode == 1
+    assert f"same commit: {repo.short(sha)} changes behaviour (tools/café.py)" in behaviour.stdout
+
+    marker_base = repo.git("rev-parse", "HEAD")
+    repo.write("docs/café.md", f"The table went live. {MARKER}\n")
+    repo.commit("an open marker in a non-ASCII file name")
+    marker = check(repo, marker_base)
+    assert marker.returncode == 1
+    assert "FAIL open marker: docs/café.md:1" in marker.stdout
